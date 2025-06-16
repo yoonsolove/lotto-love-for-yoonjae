@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>윤소 로또 번호 생성기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="manifest.json">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log("서비스워커 등록 완료"))
+      .catch(err => console.log("서비스워커 등록 실패:", err));
+    }
+  </script>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 30px; }
+    h1 { font-size: 24px; }
+    label { display: block; margin: 10px 0; font-size: 18px; }
+    button { padding: 10px 20px; font-size: 18px; margin-top: 20px; }
+    .numbers { font-size: 22px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>🎯 윤소 로또 번호 생성기</h1>
+  <p>원하는 방식으로 번호를 뽑아보세요!</p>
+
+  <form id="modeForm">
+    <label><input type="radio" name="mode" value="1" checked> ① 일반 랜덤</label>
+    <label><input type="radio" name="mode" value="2"> ② 연속번호 제외</label>
+    <label><input type="radio" name="mode" value="3"> ③ 미출현 번호 위주 (샘플)</label>
+    <label><input type="radio" name="mode" value="4"> ④ 복합 추천</label>
+  </form>
+
+  <button onclick="generateNumbers()">번호 뽑기</button>
+  <div class="numbers" id="result"></div>
+
+  <script>
+    function generateNumbers() {
+      const mode = document.querySelector('input[name="mode"]:checked').value;
+      let numbers = [];
+
+      function getRandom() {
+        return Math.floor(Math.random() * 45) + 1;
+      }
+
+      while (numbers.length < 6) {
+        let num = getRandom();
+
+        if (mode == "2" && numbers.length > 0 && Math.abs(num - numbers[numbers.length - 1]) === 1) {
+          continue;
+        }
+
+        if (mode == "3" && num <= 10) {
+          continue;
+        }
+
+        if (mode == "4") {
+          if ((numbers.length > 0 && Math.abs(num - numbers[numbers.length - 1]) === 1) || num <= 10) {
+            continue;
+          }
+        }
+
+        if (!numbers.includes(num)) numbers.push(num);
+      }
+
+      numbers.sort((a, b) => a - b);
+      document.getElementById("result").innerText = "🎉 추천 번호: " + numbers.join(', ');
+    }
+  </script>
+</body>
+</html>
