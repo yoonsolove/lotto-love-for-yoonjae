@@ -2,7 +2,7 @@
 {
   "name": "윤소 로또앱",
   "short_name": "로또앱",
-  "start_url": "yunso_lotto_pwa.html",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#fdd835",
